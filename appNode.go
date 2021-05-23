@@ -24,6 +24,7 @@ type Node struct {
 // NodeAttributes is the struct for the attributes of a node
 type NodeAttributes struct {
 	ID              int       `json:"id,omitempty"`
+	Uuid            string    `json:"uuid,omitempty"`
 	Public          bool      `json:"public,omitempty"`
 	Name            string    `json:"name,omitempty"`
 	Description     string    `json:"description,omitempty"`
