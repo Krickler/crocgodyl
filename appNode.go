@@ -105,9 +105,8 @@ func (config *AppConfig) GetNodes() (nodes AppNodes, err error) {
 			if err != nil {
 				return nodes, err
 			}
-			for _, location := range pageNodes.Nodes {
-				nodes.Nodes = append(nodes.Nodes, location)
-			}
+			nodes.Nodes = append(nodes.Nodes, pageNodes.Nodes...)
+
 		}
 	}
 
@@ -158,7 +157,7 @@ func (config *AppConfig) getNodeAllocationsByPage(nodeID int, pageID int) (NodeA
 // Depending on how man allocations you have this may take a while.
 func (config *AppConfig) GetNodeAllocations(nodeID int) (allocations NodeAllocations, err error) {
 	// Get allocation info from the panel
-	allocBytes, err := config.queryApplicationAPI(fmt.Sprintf("nodes/%d/allocations?page=%d", nodeID), "get", nil)
+	allocBytes, err := config.queryApplicationAPI(fmt.Sprintf("nodes/%d/allocations?page=%d", nodeID, nodeID), "get", nil)
 	if err != nil {
 		return
 	}
@@ -174,9 +173,7 @@ func (config *AppConfig) GetNodeAllocations(nodeID int) (allocations NodeAllocat
 		if err != nil {
 			return allocations, err
 		}
-		for _, allocation := range allocations.Allocations {
-			allocations.Allocations = append(allocations.Allocations, allocation)
-		}
+		allocations.Allocations = append(allocations.Allocations, allocations.Allocations...)
 	}
 
 	return
@@ -223,7 +220,7 @@ func (config *AppConfig) GetNodeAllocationByID(nodeID int, allocationID int) (po
 
 // CreateNode creates a Node.
 func (config *AppConfig) CreateNode(newNode NodeAttributes) (node Node, err error) {
-	endpoint := fmt.Sprintf("nodes/")
+	endpoint := "nodes/"
 
 	newNodeBytes, err := json.Marshal(newNode)
 	if err != nil {
